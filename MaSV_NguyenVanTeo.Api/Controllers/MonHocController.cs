@@ -51,5 +51,46 @@ namespace MaSV_NguyenVanTeo.Api.Controllers
 
             return Ok();
         }
+
+        [HttpPut("edit")]
+        public async Task<IActionResult> Edit(MonHocEditDto req)
+        {
+            var monHoc = await db.MonHocs
+                .Where(m => m.MonHocId == req.MonHocId)
+                .FirstOrDefaultAsync();
+
+            if (monHoc == null)
+            {
+                return NotFound();
+            }
+
+            monHoc.MaMon = req.MaMon;
+            monHoc.TenMon = req.TenMon;
+            monHoc.SoTinChi = req.SoTinChi;
+            monHoc.SoTietLyThuyet = req.SoTietLyThuyet;
+
+            await db.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("delete")]
+        public async Task<IActionResult> Delete(int monHocId)
+        {
+            var monHoc = await db.MonHocs
+                .Where(m => m.MonHocId == monHocId)
+                .FirstOrDefaultAsync();
+
+            if (monHoc == null)
+            {
+                return NotFound();
+            }
+
+            db.MonHocs.Remove(monHoc);
+
+            await db.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }
