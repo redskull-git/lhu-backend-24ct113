@@ -4,6 +4,7 @@ using MaSV_NguyenVanTeo.Api.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MaSV_NguyenVanTeo.Api.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260926030744_SinhVienDangKy")]
+    partial class SinhVienDangKy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -364,9 +367,6 @@ namespace MaSV_NguyenVanTeo.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("SinhVienId");
-
-                    b.HasIndex("MaSV")
-                        .IsUnique();
 
                     b.ToTable("SinhVien");
                 });

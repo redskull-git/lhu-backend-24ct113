@@ -14,6 +14,10 @@ namespace MaSV_NguyenVanTeo.Api.Database
 
         public DbSet<LopHocPhanEntity> LopHocPhans => Set<LopHocPhanEntity>();
 
+        public DbSet<SinhVienEntity> SinhViens => Set<SinhVienEntity>();
+
+        public DbSet<DangKyEntity> DangKies => Set<DangKyEntity>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

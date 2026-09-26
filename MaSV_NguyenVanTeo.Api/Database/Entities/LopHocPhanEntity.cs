@@ -23,5 +23,7 @@ namespace MaSV_NguyenVanTeo.Api.Database.Entities
 
         [ForeignKey(nameof(MonHocId))]
         public MonHocEntity MonHoc { get; set; } = null!;
+
+        public ICollection<DangKyEntity> DangKies { get; set; } = new List<DangKyEntity>();
     }
 }
