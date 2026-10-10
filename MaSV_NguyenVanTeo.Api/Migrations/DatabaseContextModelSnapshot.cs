@@ -74,6 +74,12 @@ namespace MaSV_NguyenVanTeo.Api.Migrations
                     b.Property<int>("NamHoc")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("NgayBatDau")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgayKetThuc")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("SiSoToiDa")
                         .HasColumnType("int");
 

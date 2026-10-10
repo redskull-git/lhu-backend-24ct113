@@ -1,8 +1,6 @@
-using MaSV_NguyenVanTeo.Api.Database;
-using MaSV_NguyenVanTeo.Api.Database.Entities;
 using MaSV_NguyenVanTeo.Api.Dto;
+using MaSV_NguyenVanTeo.Api.IServices;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace MaSV_NguyenVanTeo.Api.Controllers
 {
@@ -10,27 +8,17 @@ namespace MaSV_NguyenVanTeo.Api.Controllers
     [ApiController]
     public class LopHocPhanController : ControllerBase
     {
-        DatabaseContext db;
+        ILopHocPhanService lopHocPhanService;
 
-        public LopHocPhanController(DatabaseContext context)
+        public LopHocPhanController(ILopHocPhanService lopHocPhanService)
         {
-            db = context;
+            this.lopHocPhanService = lopHocPhanService;
         }
 
         [HttpGet("get-all")]
         public async Task<ActionResult<List<LopHocPhanDto>>> GetAll()
         {
-            List<LopHocPhanDto> danhSachLopHocPhan = await db.LopHocPhans
-                .Select(l => new LopHocPhanDto()
-                {
-                    LopHocPhanId = l.LopHocPhanId,
-                    MonHocId = l.MonHocId,
-                    MaLopHP = l.MaLopHP,
-                    HocKy = l.HocKy,
-                    NamHoc = l.NamHoc,
-                    SiSoToiDa = l.SiSoToiDa
-                })
-                .ToListAsync();
+            var danhSachLopHocPhan = await lopHocPhanService.GetAllAsync();
 
             return Ok(danhSachLopHocPhan);
         }
@@ -38,62 +26,31 @@ namespace MaSV_NguyenVanTeo.Api.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> Add(LopHocPhanAddDto req)
         {
-            LopHocPhanEntity newLopHocPhan = new LopHocPhanEntity()
-            {
-                MonHocId = req.MonHocId,
-                MaLopHP = req.MaLopHP,
-                HocKy = req.HocKy,
-                NamHoc = req.NamHoc,
-                SiSoToiDa = req.SiSoToiDa
-            };
+            var isSuccess = await lopHocPhanService.AddAsync(req);
 
-            await db.LopHocPhans.AddAsync(newLopHocPhan);
+            if (isSuccess == true) return Ok();
 
-            await db.SaveChangesAsync();
-
-            return Ok();
+            return BadRequest();
         }
 
         [HttpPut("edit")]
         public async Task<IActionResult> Edit(LopHocPhanEditDto req)
         {
-            var lopHocPhan = await db.LopHocPhans
-                .Where(l => l.LopHocPhanId == req.LopHocPhanId)
-                .FirstOrDefaultAsync();
+            var isSuccess = await lopHocPhanService.EditAsync(req);
 
-            if (lopHocPhan == null)
-            {
-                return NotFound();
-            }
+            if (isSuccess == true) return Ok();
 
-            lopHocPhan.MonHocId = req.MonHocId;
-            lopHocPhan.MaLopHP = req.MaLopHP;
-            lopHocPhan.HocKy = req.HocKy;
-            lopHocPhan.NamHoc = req.NamHoc;
-            lopHocPhan.SiSoToiDa = req.SiSoToiDa;
-
-            await db.SaveChangesAsync();
-
-            return Ok();
+            return BadRequest();
         }
 
         [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int lopHocPhanId)
         {
-            var lopHocPhan = await db.LopHocPhans
-                .Where(l => l.LopHocPhanId == lopHocPhanId)
-                .FirstOrDefaultAsync();
+            var isSuccess = await lopHocPhanService.DeleteAsync(lopHocPhanId);
 
-            if (lopHocPhan == null)
-            {
-                return NotFound();
-            }
+            if (isSuccess == true) return Ok();
 
-            db.LopHocPhans.Remove(lopHocPhan);
-
-            await db.SaveChangesAsync();
-
-            return Ok();
+            return BadRequest();
         }
     }
 }

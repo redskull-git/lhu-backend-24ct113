@@ -21,6 +21,10 @@ namespace MaSV_NguyenVanTeo.Api.Database.Entities
 
         public int SiSoToiDa { get; set; }
 
+        public DateTime? NgayBatDau { get; set; }
+
+        public DateTime? NgayKetThuc { get; set; }
+
         [ForeignKey(nameof(MonHocId))]
         public MonHocEntity MonHoc { get; set; } = null!;
 

@@ -1,8 +1,6 @@
-﻿using MaSV_NguyenVanTeo.Api.Database;
-using MaSV_NguyenVanTeo.Api.Database.Entities;
-using MaSV_NguyenVanTeo.Api.Dto;
+﻿using MaSV_NguyenVanTeo.Api.Dto;
+using MaSV_NguyenVanTeo.Api.IServices;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace MaSV_NguyenVanTeo.Api.Controllers
 {
@@ -10,26 +8,17 @@ namespace MaSV_NguyenVanTeo.Api.Controllers
     [ApiController]
     public class MonHocController : ControllerBase
     {
-        DatabaseContext db;
+        IMonHocService monHocService;
 
-        public MonHocController(DatabaseContext context)
+        public MonHocController(IMonHocService monHocService)
         {
-            db = context;
+            this.monHocService = monHocService;
         }
 
         [HttpGet("get-all")]
         public async Task<ActionResult<List<MonHocDto>>> GetAll()
         {
-            List<MonHocDto> danhSachMonHoc = await db.MonHocs
-                .Select(m => new MonHocDto()
-                {
-                    MonHocId = m.MonHocId,
-                    MaMon = m.MaMon,
-                    TenMon = m.TenMon,
-                    SoTinChi = m.SoTinChi,
-                    SoTietLyThuyet = m.SoTietLyThuyet
-                })
-                .ToListAsync();
+            var danhSachMonHoc = await monHocService.GetAllAsync();
 
             return Ok(danhSachMonHoc);
         }
@@ -37,60 +26,35 @@ namespace MaSV_NguyenVanTeo.Api.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> Add(MonHocAddDto req)
         {
-            MonHocEntity newMonHoc = new MonHocEntity()
-            {
-                MaMon = req.MaMon,
-                TenMon = req.TenMon,
-                SoTinChi = req.SoTinChi,
-                SoTietLyThuyet = req.SoTietLyThuyet
-            };
+            int a = 10;
+            int b = 0;
+            var c = a / b;
 
-            await db.MonHocs.AddAsync(newMonHoc);
+            var isSuccess = await monHocService.AddAsync(req);
 
-            await db.SaveChangesAsync();
+            if (isSuccess == true) return Ok();
 
-            return Ok();
+            return BadRequest();
         }
 
         [HttpPut("edit")]
         public async Task<IActionResult> Edit(MonHocEditDto req)
         {
-            var monHoc = await db.MonHocs
-                .Where(m => m.MonHocId == req.MonHocId)
-                .FirstOrDefaultAsync();
+            var isSuccess = await monHocService.EditAsync(req);
 
-            if (monHoc == null)
-            {
-                return NotFound();
-            }
+            if (isSuccess == true) return Ok();
 
-            monHoc.MaMon = req.MaMon;
-            monHoc.TenMon = req.TenMon;
-            monHoc.SoTinChi = req.SoTinChi;
-            monHoc.SoTietLyThuyet = req.SoTietLyThuyet;
-
-            await db.SaveChangesAsync();
-
-            return Ok();
+            return BadRequest();
         }
 
         [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int monHocId)
         {
-            var monHoc = await db.MonHocs
-                .Where(m => m.MonHocId == monHocId)
-                .FirstOrDefaultAsync();
+            var isSuccess = await monHocService.DeleteAsync(monHocId);
 
-            if (monHoc == null)
-            {
-                return NotFound();
-            }
+            if (isSuccess == true) return Ok();
 
-            db.MonHocs.Remove(monHoc);
-
-            await db.SaveChangesAsync();
-
-            return Ok();
+            return BadRequest();
         }
     }
 }
