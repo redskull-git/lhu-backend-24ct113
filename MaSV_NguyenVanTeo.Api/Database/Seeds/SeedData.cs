@@ -234,6 +234,41 @@ namespace MaSV_NguyenVanTeo.Api.Database.Seeds
             }
         };
 
+        // ==========================================
+        // Danh sách tài khoản người dùng mẫu (Seed Data)
+        // Mật khẩu mặc định: "MatKhau@123" được băm sẵn bằng BCrypt
+        // ==========================================
+        public static readonly List<NguoiDungEntity> NguoiDungList = new()
+        {
+            new NguoiDungEntity
+            {
+                Id = 1,
+                TenDangNhap = "daotao",
+                MatKhauHash = "$2a$11$ToDL5Apm.cdz0RUOZggDkenlORElj.PA6qx1gZ7G5Yj5XQdhNml46",
+                VaiTro = "DaoTao",
+                SinhVienId = null,
+                GiangVienId = null
+            },
+            new NguoiDungEntity
+            {
+                Id = 2,
+                TenDangNhap = "giangvien",
+                MatKhauHash = "$2a$11$ToDL5Apm.cdz0RUOZggDkenlORElj.PA6qx1gZ7G5Yj5XQdhNml46",
+                VaiTro = "GiangVien",
+                SinhVienId = null,
+                GiangVienId = 1
+            },
+            new NguoiDungEntity
+            {
+                Id = 3,
+                TenDangNhap = "sinhvien",
+                MatKhauHash = "$2a$11$ToDL5Apm.cdz0RUOZggDkenlORElj.PA6qx1gZ7G5Yj5XQdhNml46",
+                VaiTro = "SinhVien",
+                SinhVienId = 1,
+                GiangVienId = null
+            }
+        };
+
         /// <summary>
         /// Cấu hình Seed data cho ModelBuilder (EF Core Migrations HasData).
         /// Sử dụng trong DatabaseContext.OnModelCreating: modelBuilder.Seed();
@@ -242,32 +277,7 @@ namespace MaSV_NguyenVanTeo.Api.Database.Seeds
         {
             modelBuilder.Entity<MonHocEntity>().HasData(MonHocList);
             modelBuilder.Entity<LopHocPhanEntity>().HasData(LopHocPhanList);
+            modelBuilder.Entity<NguoiDungEntity>().HasData(NguoiDungList);
         }
-
-        /// <summary>
-        /// Khởi tạo và nạp Seed data khi ứng dụng khởi chạy (Runtime Seeding).
-        /// Gọi trong Program.cs: SeedData.Initialize(context);
-        /// </summary>
-        public static void Initialize(DatabaseContext context)
-        {
-            context.Database.EnsureCreated();
-
-            if (!context.MonHocs.Any())
-            {
-                context.MonHocs.AddRange(MonHocList);
-                context.SaveChanges();
-            }
-
-            if (!context.LopHocPhans.Any())
-            {
-                context.LopHocPhans.AddRange(LopHocPhanList);
-                context.SaveChanges();
-            }
-        }
-    }
-
-    public static class DbInitializer
-    {
-        public static void Initialize(DatabaseContext context) => SeedData.Initialize(context);
     }
 }

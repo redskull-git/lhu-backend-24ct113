@@ -18,6 +18,8 @@ namespace MaSV_NguyenVanTeo.Api.Database
 
         public DbSet<DangKyEntity> DangKies => Set<DangKyEntity>();
 
+        public DbSet<NguoiDungEntity> NguoiDungs => Set<NguoiDungEntity>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
