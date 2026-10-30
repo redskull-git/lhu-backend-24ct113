@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="MaSV_NguyenVanTeo.Api/MaSV_NguyenVanTeo.Api.csproj" />
+  <Project Path="WebApplication1/WebApplication1.csproj" Id="463ae6f1-b895-4267-8dad-f84f444e0229" />
 </Solution>
